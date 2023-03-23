@@ -1,3 +1,8 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Resturent.Web.Services.IServices;
+using Resturent.Web.Services;
+using Resturent.Web.Models;
+
 namespace Resturent.Web
 {
     public class Program
@@ -5,6 +10,22 @@ namespace Resturent.Web
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddHttpClient<IProductService, ProductService>();
+
+            //services.AddHttpClient<ICartService, CartService>();
+            //services.AddHttpClient<ICouponService, CouponService>();
+
+            ServiceUrls serviceUrls = builder.Configuration.GetSection("ServiceUrls").Get<ServiceUrls>();
+            ServiceConstant.ProductApiBase = serviceUrls.ProductApi;
+
+            //SD.ShoppingCartAPIBase = Configuration["ServiceUrls:ShoppingCartAPI"];
+            //SD.CouponAPIBase = Configuration["ServiceUrls:CouponAPI"];
+
+            builder.Services.AddScoped<IProductService, ProductService>();
+
+            //services.AddScoped<ICartService, CartService>();
+            //services.AddScoped<ICouponService, CouponService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
